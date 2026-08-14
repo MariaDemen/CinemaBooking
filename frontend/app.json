@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Theater Booking",
+    "slug": "theater-booking-more-style",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "web": { "bundler": "metro" }
+  }
+}
