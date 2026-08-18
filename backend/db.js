@@ -6,7 +6,7 @@ const pool = mariadb.createPool({
   port: Number(process.env.DB_PORT || 3306),
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'theater_booking',
+  database: process.env.DB_NAME || 'cinema_booking',
   connectionLimit: 5
 });
 
