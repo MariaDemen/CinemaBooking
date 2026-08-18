@@ -1,8 +1,8 @@
-CREATE DATABASE IF NOT EXISTS theater_booking
+CREATE DATABASE IF NOT EXISTS cinema_booking
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_general_ci;
 
-USE theater_booking;
+USE cinema_booking;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
