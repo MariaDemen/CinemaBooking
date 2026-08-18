@@ -81,7 +81,7 @@ export default function HomeScreen({ navigation, authContext }) {
 
             <View style={styles.hero}>
               <Text style={styles.heroTitle}>Book your next cinema night</Text>
-              <Text style={styles.heroText}>Ανακάλυψε ταινίες και διαθέσιμες ημερομηνίες.</Text>
+              <Text style={styles.heroText}>Discover movies and available dates.</Text>
             </View>
 
             {isAdmin && (
@@ -91,17 +91,17 @@ export default function HomeScreen({ navigation, authContext }) {
             )}
 
             <TouchableOpacity style={styles.ticketsButton} onPress={() => navigation.navigate('Reservations')}>
-              <Text style={styles.buttonText}>Τα εισιτήριά μου</Text>
+              <Text style={styles.buttonText}>My tickets</Text>
             </TouchableOpacity>
 
             <View style={styles.searchWrap}>
-              <TextInput style={styles.input} placeholder="Αναζήτηση παράστασης" placeholderTextColor="#94A3B8" value={search} onChangeText={setSearch} />
+              <TextInput style={styles.input} placeholder="Search movie" placeholderTextColor="#94A3B8" value={search} onChangeText={setSearch} />
               <TouchableOpacity style={styles.searchButton} onPress={fetchShows}>
                 <Text style={styles.buttonText}>Search</Text>
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.sectionTitle}>Θέατρα</Text>
+            <Text style={styles.sectionTitle}>Cinema</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.theatresScroll}>
               {theatres.map((t) => (
                 <View key={t.theatre_id} style={styles.theatrePill}>
@@ -111,7 +111,7 @@ export default function HomeScreen({ navigation, authContext }) {
               ))}
             </ScrollView>
 
-            <Text style={styles.sectionTitle}>Προτεινόμενες ταινίες</Text>
+            <Text style={styles.sectionTitle}>Playing now</Text>
           </>
         }
         contentContainerStyle={styles.listContent}
