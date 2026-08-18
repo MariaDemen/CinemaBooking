@@ -1,7 +1,5 @@
-MyTheaterBooking_MoreStyle
-
 ΠΕΡΙΓΡΑΦΗ
-Full-stack εφαρμογή κρατήσεων θεατρικών παραστάσεων με React Native / Expo frontend, Node.js / Express backend και MariaDB / MySQL βάση.
+Full-stack εφαρμογή κρατήσεων ταινιών με React Native / Expo frontend, Node.js / Express backend και MariaDB / MySQL βάση.
 Το UI είναι εμπνευσμένο από σύγχρονες ticketing πλατφόρμες τύπου more.com: dark theme, cards, εικόνες, θέατρα, events και εισιτήρια.
 
 ΔΟΜΗ
@@ -13,7 +11,7 @@ database/     setup.sql για MariaDB/XAMPP
 1) Εγκατάσταση Node.js LTS.
 2) XAMPP -> Start MySQL.
 3) Δημιούργησε backend/.env αντιγράφοντας το backend/.env.example.
-4) Κάνε import τη βάση:
+4) import τη βάση:
    - είτε τρέχοντας IMPORT_DATABASE.bat
    - είτε phpMyAdmin -> Import -> database/setup.sql
 
@@ -23,7 +21,7 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=
-DB_NAME=theater_booking
+DB_NAME=cinema_booking
 JWT_SECRET=my_super_secret_jwt_key
 
 ΕΓΚΑΤΑΣΤΑΣΗ
@@ -50,12 +48,14 @@ Frontend για browser:
 START_FRONTEND_WEB.bat
 ή:
 cd frontend
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 npx expo start --web -c
 
 Frontend για κινητό Expo Go:
 START_FRONTEND_LAN.bat
 ή:
 cd frontend
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 npx expo start --lan -c
 
 ΣΗΜΑΝΤΙΚΟ ΓΙΑ IP
@@ -67,9 +67,11 @@ npx expo start --lan -c
 - Το κινητό και ο υπολογιστής πρέπει να είναι στο ίδιο Wi-Fi ή hotspot.
 
 Για την database:
-Την εισαγουμε στο xamp πατωντας mysql -> admin -> εισαγωγη -> databse/setup.sql
+Την εισαγουμε στο xampp πατωντας mysql -> admin -> εισαγωγη -> databse/setup.sql
 
-Το αρχειο .env.example.txt αλλαζει ονομα σε .env
+Το αρχειο .env.example.txt αλλαζει ονομα σε .env 
+Αλλαξα το όνομα ώστε να μπορέσει να ανέβει στo GitHub οπου δεν με άφηνε να το ανεβάσω αν δεν αλλαζα το όνομα.
+Να σημειωθεί ότι χρησιμοποίησα αυτές τις εικόνες στις ταινίες λόγω προσωπικών δικαιωμάτων.Αλλιώς θα μπορούσα να έβαζα την κανονική αφίσα ή φωτογραφία που υπάρχει στην κάθε ταινία. 
 
 DEFAULT LOGINS
 Admin:
@@ -83,15 +85,15 @@ password: 123456
 FEATURES
 User:
 - Register / Login
-- Προβολή παραστάσεων
-- Προβολή θεάτρων
-- Αναζήτηση παραστάσεων
+- Προβολή ταινιών
+- Προβολή κινηματογράφων-παραστάσεων
+- Αναζήτηση ταινιών
 - Κράτηση εισιτηρίων
 - Προβολή και ακύρωση κρατήσεων
 
 Admin:
 - Admin Panel
-- Add / Edit / Delete παραστάσεων
+- Add / Edit / Delete ταινιων
 - Image URL ή upload εικόνας
 - Προβολή όλων των users
 - Add / Edit / Delete users
