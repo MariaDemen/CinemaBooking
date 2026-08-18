@@ -5,6 +5,7 @@ const adminMiddleware = require('../middleware/admin');
 
 const router = express.Router();
 
+
 /*
 =========================================================
 GET MY RESERVATIONS
@@ -12,9 +13,11 @@ GET MY RESERVATIONS
 */
 
 router.get('/my', authMiddleware, async (req, res) => {
+
   let conn;
 
   try {
+
     conn = await pool.getConnection();
 
     const rows = await conn.query(
@@ -238,6 +241,10 @@ router.post('/', authMiddleware, async (req, res) => {
       seat_numbers
     } = req.body;
 
+
+    /*
+    Validate request
+    */
 
     if (
       !showtime_id ||
@@ -629,6 +636,10 @@ router.put(
       } = req.body;
 
 
+      /*
+      Validate seats
+      */
+
       if (
         !Array.isArray(seat_numbers) ||
         seat_numbers.length === 0
@@ -718,6 +729,11 @@ router.put(
         reservationRows[0];
 
 
+      /*
+      Only active reservations
+      can be edited
+      */
+
       if (
         reservation.status !==
         'ACTIVE'
@@ -743,8 +759,7 @@ router.put(
 
 
       /*
-      Make sure selected number
-      does not exceed cinema capacity
+      Check cinema capacity
       */
 
       if (
@@ -981,7 +996,18 @@ router.put(
 
 /*
 =========================================================
-ADMIN - CANCEL RESERVATION
+ADMIN - DELETE RESERVATION
+=========================================================
+*
+* ADMIN ONLY
+*
+* This permanently deletes:
+*
+* 1. reservation_seats records
+* 2. reservation record
+*
+* The user can then reserve these seats again.
+*
 =========================================================
 */
 
@@ -1007,16 +1033,60 @@ router.delete(
       await conn.beginTransaction();
 
 
+      /*
+      Check if reservation exists
+      */
+
+      const reservationRows =
+        await conn.query(
+          `
+          SELECT
+            reservation_id,
+            showtime_id,
+            status
+          FROM reservations
+          WHERE reservation_id = ?
+          FOR UPDATE
+          `,
+          [id]
+        );
+
+
+      if (
+        reservationRows.length === 0
+      ) {
+
+        await conn.rollback();
+
+        return res.status(404).json({
+          message:
+            'Reservation not found.'
+        });
+      }
+
+
+      /*
+      Delete reservation seats FIRST
+      */
+
+      await conn.query(
+        `
+        DELETE FROM reservation_seats
+        WHERE reservation_id = ?
+        `,
+        [id]
+      );
+
+
+      /*
+      Delete reservation SECOND
+      */
+
       const result =
         await conn.query(
           `
-          UPDATE reservations
-
-          SET status = 'CANCELLED'
-
+          DELETE FROM reservations
           WHERE reservation_id = ?
-
-          AND status = 'ACTIVE'
           `,
           [id]
         );
@@ -1030,39 +1100,29 @@ router.delete(
 
         return res.status(404).json({
           message:
-            'Active reservation not found.'
+            'Reservation could not be deleted.'
         });
       }
 
 
       /*
-      Release seats
+      Everything succeeded
       */
-
-      await conn.query(
-        `
-        UPDATE reservation_seats
-
-        SET status = 'CANCELLED'
-
-        WHERE reservation_id = ?
-
-        AND status = 'ACTIVE'
-        `,
-        [id]
-      );
-
 
       await conn.commit();
 
 
       res.json({
         message:
-          'Reservation cancelled successfully.'
+          'Reservation deleted successfully.'
       });
 
 
     } catch (error) {
+
+      /*
+      Rollback if something failed
+      */
 
       if (conn) {
 
@@ -1079,14 +1139,16 @@ router.delete(
 
 
       console.error(
-        'ADMIN CANCEL RESERVATION ERROR:',
+        'ADMIN DELETE RESERVATION ERROR:',
         error
       );
 
 
       res.status(500).json({
-        message: 'Server error'
+        message:
+          'Server error'
       });
+
 
     } finally {
 
@@ -1101,6 +1163,13 @@ router.delete(
 /*
 =========================================================
 USER - CANCEL RESERVATION
+=========================================================
+*
+* USER CAN ONLY CANCEL THEIR OWN RESERVATION.
+*
+* This does NOT permanently delete the reservation.
+* It changes the reservation status to CANCELLED.
+*
 =========================================================
 */
 
@@ -1173,6 +1242,8 @@ router.delete(
         SET status = 'CANCELLED'
 
         WHERE reservation_id = ?
+
+        AND status = 'ACTIVE'
         `,
         [id]
       );
@@ -1210,8 +1281,10 @@ router.delete(
 
 
       res.status(500).json({
-        message: 'Server error'
+        message:
+          'Server error'
       });
+
 
     } finally {
 
